@@ -2,11 +2,12 @@
 mcts.py: Monte-Carlo Tree Search Engine integrated with PyTorch DQN value evaluations.
 Uses the UCB1 equation to select search branches dynamically.
 """
+import os
 import torch
 import numpy as np
 import copy
-from environment.env import ConnectFourEnv
-from agents.agents import ConnectFourNet
+from src.environment.env import ConnectFourEnv
+from src.agents.agents import ConnectFourNet
 
 class MCTSNode:
     def __init__(self, board, parent=None, action=None, player_turn=1):
@@ -27,12 +28,17 @@ class MCTSNode:
 
 
 class NeuralMCTS:
-    def __init__(self, model_path="../connect4_dqn.pt", exploration_constant=1.414):
+    def __init__(self, model_path=None, exploration_constant=1.414):
         self.c = exploration_constant
         
+        if model_path is None:
+            # Resolve relative to the project root directory
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            model_path = os.path.join(base_dir, "connect4_dqn.pt")
+            
         # Load the saved brain parameters from Stage 2
         self.policy_net = ConnectFourNet()
-        self.policy_net.load_state_dict(torch.load(model_path))
+        self.policy_net.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
         self.policy_net.eval()
 
     def run_search(self, root_board, current_player, simulations=100):

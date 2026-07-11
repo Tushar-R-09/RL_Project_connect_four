@@ -1,8 +1,8 @@
 """
 play.py: Terminal CLI interface to play live matches against the MCTS+DQN AI engine.
 """
-from environment.env import ConnectFourEnv
-from mcts import NeuralMCTS
+from src.environment.env import ConnectFourEnv
+from src.mcts import NeuralMCTS
 
 def play_against_ai():
     print("🤖 Connect Four Neural-MCTS AI Engine Initialized!")

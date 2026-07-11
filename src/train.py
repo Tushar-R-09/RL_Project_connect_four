@@ -2,8 +2,8 @@
 train.py: Self-play orchestration routine for DQN Connect Four training.
 """
 
-from environment.env import ConnectFourEnv
-from agents.agents import DQNAgent
+from src.environment.env import ConnectFourEnv
+from src.agents.agents import DQNAgent
 
 
 def train_self_play(episodes=1000, target_update_freq=10):
@@ -68,11 +68,13 @@ def train_self_play(episodes=1000, target_update_freq=10):
                 f"Episode {ep:4d}/{episodes} | Epsilon: {epsilon:.3f} | Last Loss: {loss_str}"
             )
 
-    print("🏁 Training complete! Saving network parameters...")
+    import os
     import torch
 
-    torch.save(agent.policy_net.state_dict(), "connect4_dqn.pt")
-    print("Model metrics saved securely to 'connect4_dqn.pt'")
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    save_path = os.path.join(base_dir, "connect4_dqn.pt")
+    torch.save(agent.policy_net.state_dict(), save_path)
+    print(f"Model metrics saved securely to '{save_path}'")
 
 
 if __name__ == "__main__":
